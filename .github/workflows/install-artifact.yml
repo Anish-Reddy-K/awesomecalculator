@@ -1,0 +1,31 @@
+name: Install and Test Artifact
+
+on:
+  workflow_run:
+    workflows:
+      - Build and Create Artifact
+    types:
+      - completed
+
+jobs:
+  install-artifact:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Download Artifact
+        uses: actions/download-artifact@v3
+        with:
+          name: awesome-calculator  # Replace with the artifact name you used in the build workflow
+
+      - name: Set Up Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: 3.9
+
+      - name: Install the Package
+        run: |
+          pip install ./awesome_calculator-0.1-py3-none-any.whl
+
+      - name: Verify Installation
+        run: |
+          python -c "import calculator; print('Calculator installed successfully!')"
